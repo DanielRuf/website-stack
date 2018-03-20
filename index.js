@@ -25,8 +25,10 @@ const chalk = require('chalk');
 
   try {
     jqueryVersion = await page.evaluate('jQuery.fn.jquery')
-    jqueryVersion = jqueryVersion.split(' ');
-    jqueryVersion = `${jqueryVersion[0]} (${jqueryVersion[1]})`;
+    jqueryVersion = jqueryVersion.split(/ (.+)/)
+    jqueryVersion = jqueryVersion[1]
+                    ? `${jqueryVersion[0]} (${jqueryVersion[1]})`
+                    : jqueryVersion;
   } catch(err){
 
   };
@@ -37,9 +39,17 @@ const chalk = require('chalk');
 
   };
 
-  typeof foundationVersion !== 'undefined' ? console.info(chalk.green(`Found Foundation ${chalk.yellow(foundationVersion)}`)) : console.log(chalk.red('No Foundation version found / loaded.'));
-  typeof jqueryVersion !== 'undefined' ? console.info(chalk.green(`Found jQuery ${chalk.yellow(jqueryVersion)}`)) : console.log(chalk.red('No jQuery version found / loaded.'));
-  typeof bootstrapVersion !== 'undefined' ? console.info(chalk.green(`Found Bootstrap ${chalk.yellow(bootstrapVersion)}`)) : console.log(chalk.red('No Bootstrap version found / loaded.'));
+  typeof foundationVersion !== 'undefined'
+         ? console.info(chalk.green(`Found Foundation ${chalk.yellow(foundationVersion)}`))
+         : console.log(chalk.red('No Foundation version found / loaded.'));
+
+  typeof jqueryVersion !== 'undefined'
+         ? console.info(chalk.green(`Found jQuery ${chalk.yellow(jqueryVersion)}`))
+         : console.log(chalk.red('No jQuery version found / loaded.'));
+
+  typeof bootstrapVersion !== 'undefined'
+         ? console.info(chalk.green(`Found Bootstrap ${chalk.yellow(bootstrapVersion)}`))
+         : console.log(chalk.red('No Bootstrap version found / loaded.'));
 
   await browser.close();
 })();
