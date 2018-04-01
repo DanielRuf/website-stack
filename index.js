@@ -21,6 +21,12 @@ async function run(){
   let foundationVersion
   let jqueryVersion
   let bootstrapVersion
+  let firebaseVersion
+  let backboneVersion
+  let emberVersion
+  let handlebarsVersion
+  let hammerVersion
+  let angularVersion
 
   let webpackUsed
   let googleanalyticsUsed
@@ -31,6 +37,7 @@ async function run(){
   let googlewebfontsUsed
   let wpUsed
   let youtubeUsed
+  let modernizrUsed
 
   try {
     foundationVersion = await page.evaluate('Foundation.version')
@@ -46,6 +53,30 @@ async function run(){
 
   try {
     bootstrapVersion = await page.evaluate('bootstrap.Tooltip.VERSION || $.fn.tooltip.Constructor.VERSION')
+  } catch(err){}
+
+  try {
+    firebaseVersion = await page.evaluate('Firebase.SDK_VERSION')
+  } catch(err){}
+
+  try {
+    backboneVersion = await page.evaluate('Backbone.VERSION')
+  } catch(err){}
+
+  try {
+    emberVersion = await page.evaluate('Ember.VERSION')
+  } catch(err){}
+
+  try {
+    handlebarsVersion = await page.evaluate('Handlebars.VERSION')
+  } catch(err){}
+
+  try {
+    hammerVersion = await page.evaluate('Hammer.VERSION')
+  } catch(err){}
+
+  try {
+    angularVersion = await page.evaluate('angular.version.full')
   } catch(err){}
 
   try {
@@ -84,6 +115,10 @@ async function run(){
     youtubeUsed = await page.evaluate('YT')
   } catch(err){}
 
+  try {
+    modernizrUsed = await page.evaluate('Modernizr')
+  } catch(err){}
+
   typeof foundationVersion !== 'undefined'
          ? console.info(chalk.green(`Found Foundation ${chalk.yellow(foundationVersion)}.`))
          : console.log(chalk.red('No Foundation found.'))
@@ -95,6 +130,30 @@ async function run(){
   typeof bootstrapVersion !== 'undefined'
          ? console.info(chalk.green(`Found Bootstrap ${chalk.yellow(bootstrapVersion)}.`))
          : console.log(chalk.red('No Bootstrap found.'))
+
+  typeof firebaseVersion !== 'undefined'
+         ? console.info(chalk.green(`Found Firebase ${chalk.yellow(firebaseVersion)}.`))
+         : console.log(chalk.red('No Firebase found.'))
+
+  typeof backboneVersion !== 'undefined'
+         ? console.info(chalk.green(`Found Backbone ${chalk.yellow(backboneVersion)}.`))
+         : console.log(chalk.red('No Backbone found.'))
+
+  typeof emberVersion !== 'undefined'
+         ? console.info(chalk.green(`Found Ember ${chalk.yellow(emberVersion)}.`))
+         : console.log(chalk.red('No Ember found.'))
+
+  typeof handlebarsVersion !== 'undefined'
+         ? console.info(chalk.green(`Found Handlebars ${chalk.yellow(handlebarsVersion)}.`))
+         : console.log(chalk.red('No Handlebars found.'))
+
+  typeof hammerVersion !== 'undefined'
+         ? console.info(chalk.green(`Found Hammer ${chalk.yellow(hammerVersion)}.`))
+         : console.log(chalk.red('No Hammer found.'))
+
+  typeof angularVersion !== 'undefined'
+         ? console.info(chalk.green(`Found Angular.js ${chalk.yellow(angularVersion)}.`))
+         : console.log(chalk.red('No Angular.js found.'))
 
   typeof webpackUsed !== 'undefined'
          ? console.info(chalk.green(`Found webpack.`))
@@ -131,6 +190,10 @@ async function run(){
   typeof youtubeUsed !== 'undefined'
          ? console.info(chalk.green(`Found YouTube.`))
          : console.log(chalk.red('No YouTube found.'))
+
+  typeof modernizrUsed !== 'undefined'
+         ? console.info(chalk.green(`Found Modernizr.`))
+         : console.log(chalk.red('No Modernizr found.'))
 
   await browser.close()
 }
