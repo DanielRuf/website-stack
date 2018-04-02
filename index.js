@@ -27,6 +27,8 @@ async function run(){
   let handlebarsVersion
   let hammerVersion
   let angularVersion
+  let nprogressVersion
+  let uikitVersion
 
   let webpackUsed
   let googleanalyticsUsed
@@ -38,6 +40,8 @@ async function run(){
   let wpUsed
   let youtubeUsed
   let modernizrUsed
+  let ghostUsed
+  let joomlaUsed
 
   try {
     foundationVersion = await page.evaluate('Foundation.version')
@@ -80,6 +84,14 @@ async function run(){
   } catch(err){}
 
   try {
+    nprogressVersion = await page.evaluate('NProgress.version')
+  } catch(err){}
+
+  try {
+    uikitVersion = await page.evaluate('UIkit.version')
+  } catch(err){}
+
+  try {
     webpackUsed = await page.evaluate('webpackJsonp')
   } catch(err){}
 
@@ -119,6 +131,14 @@ async function run(){
     modernizrUsed = await page.evaluate('Modernizr')
   } catch(err){}
 
+  try {
+    ghostUsed = await page.evaluate('ghost')
+  } catch(err){}
+
+  try {
+    joomlaUsed = await page.evaluate('Joomla')
+  } catch(err){}
+
   typeof foundationVersion !== 'undefined'
          ? console.info(chalk.green(`Found Foundation ${chalk.yellow(foundationVersion)}.`))
          : console.log(chalk.red('No Foundation found.'))
@@ -154,6 +174,14 @@ async function run(){
   typeof angularVersion !== 'undefined'
          ? console.info(chalk.green(`Found Angular.js ${chalk.yellow(angularVersion)}.`))
          : console.log(chalk.red('No Angular.js found.'))
+
+  typeof nprogressVersion !== 'undefined'
+         ? console.info(chalk.green(`Found NProgress ${chalk.yellow(nprogressVersion)}.`))
+         : console.log(chalk.red('No NProgress found.'))
+
+  typeof uikitVersion !== 'undefined'
+         ? console.info(chalk.green(`Found UIkit ${chalk.yellow(uikitVersion)}.`))
+         : console.log(chalk.red('No UIkit found.'))
 
   typeof webpackUsed !== 'undefined'
          ? console.info(chalk.green(`Found webpack.`))
@@ -194,6 +222,14 @@ async function run(){
   typeof modernizrUsed !== 'undefined'
          ? console.info(chalk.green(`Found Modernizr.`))
          : console.log(chalk.red('No Modernizr found.'))
+
+  typeof ghostUsed !== 'undefined'
+         ? console.info(chalk.green(`Found ghost.`))
+         : console.log(chalk.red('No ghost found.'))
+
+  typeof joomlaUsed !== 'undefined'
+         ? console.info(chalk.green(`Found Joomla.`))
+         : console.log(chalk.red('No Joomla found.'))
 
   await browser.close()
 }
