@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer')
 const chalk = require('chalk')
 const pkg = require('./package.json')
 
-console.log(pkg.name + " " + pkg.version)
+console.log(pkg.name + ' ' + pkg.version)
 
 run()
 
@@ -18,10 +18,66 @@ async function run(){
 
   await page.goto(process.argv[2]) // get website from the first parameter after the script
 
-  let foundationVersion
-  let jqueryVersion
-  let bootstrapVersion
-  let firebaseVersion
+  const detections = [
+    {
+      name: 'Foundation',
+      check: function(){
+        return 'Foundation.version'
+      },
+      output: function(result){
+        return chalk.yellow(result)
+      }
+    },
+    {
+      name: 'jQuery',
+      check: function(){
+          return 'jQuery.fn.jquery'
+      },
+      output: function(result){
+        result = result.split(/ (.+)/)
+        result = result[1]
+                 ? `${result[0]} (${result[1]})`
+                 : result
+         return chalk.yellow(result)
+      }
+    },
+    {
+      name: 'Bootstrap',
+      check: function(){
+        return 'bootstrap.Tooltip.VERSION || $.fn.tooltip.Constructor.VERSION'
+      },
+      output: function(result){
+        return chalk.yellow(result)
+      }
+    },
+    {
+      name: 'Firebase',
+      check: function(){
+        return 'Firebase.SDK_VERSION'
+      },
+      output: function(result){
+        return chalk.yellow(result)
+      }
+    },
+  ]
+  
+  const detections_length = detections.length
+  for(i = 0; i < detections_length; i++){
+      let result
+      let name =  detections[i].name
+      try {
+          result = await page.evaluate(detections[i].check());
+      } catch(err){}
+      typeof result !== 'undefined'
+      ? detections[i].output
+        ? console.info(chalk.green('Found ' + name + ' ' + detections[i].output(result) + '.'))
+        : console.info(chalk.green('Found ' + name + '.'))
+      : console.log(chalk.red('No ' + name + ' found.'))
+  }
+  
+  process.exit(1)
+  return
+  
   let backboneVersion
   let emberVersion
   let handlebarsVersion
@@ -43,26 +99,6 @@ async function run(){
   let ghostUsed
   let joomlaUsed
   let drupalUsed
-
-  try {
-    foundationVersion = await page.evaluate('Foundation.version')
-  } catch(err){}
-
-  try {
-    jqueryVersion = await page.evaluate('jQuery.fn.jquery')
-    jqueryVersion = jqueryVersion.split(/ (.+)/)
-    jqueryVersion = jqueryVersion[1]
-                    ? `${jqueryVersion[0]} (${jqueryVersion[1]})`
-                    : jqueryVersion
-  } catch(err){}
-
-  try {
-    bootstrapVersion = await page.evaluate('bootstrap.Tooltip.VERSION || $.fn.tooltip.Constructor.VERSION')
-  } catch(err){}
-
-  try {
-    firebaseVersion = await page.evaluate('Firebase.SDK_VERSION')
-  } catch(err){}
 
   try {
     backboneVersion = await page.evaluate('Backbone.VERSION')
@@ -143,22 +179,6 @@ async function run(){
   try {
     drupalUsed = await page.evaluate('Drupal')
   } catch(err){}
-
-  typeof foundationVersion !== 'undefined'
-         ? console.info(chalk.green(`Found Foundation ${chalk.yellow(foundationVersion)}.`))
-         : console.log(chalk.red('No Foundation found.'))
-
-  typeof jqueryVersion !== 'undefined'
-         ? console.info(chalk.green(`Found jQuery ${chalk.yellow(jqueryVersion)}.`))
-         : console.log(chalk.red('No jQuery found.'))
-
-  typeof bootstrapVersion !== 'undefined'
-         ? console.info(chalk.green(`Found Bootstrap ${chalk.yellow(bootstrapVersion)}.`))
-         : console.log(chalk.red('No Bootstrap found.'))
-
-  typeof firebaseVersion !== 'undefined'
-         ? console.info(chalk.green(`Found Firebase ${chalk.yellow(firebaseVersion)}.`))
-         : console.log(chalk.red('No Firebase found.'))
 
   typeof backboneVersion !== 'undefined'
          ? console.info(chalk.green(`Found Backbone ${chalk.yellow(backboneVersion)}.`))
