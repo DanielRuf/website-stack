@@ -18,129 +18,6 @@ async function run(){
 
   await outputResults(detections, page)
 
-  process.exit(1)
-  return
-
-  let webpackUsed
-  let googleanalyticsUsed
-  let isotopeUsed
-  let masonryUsed
-  let outlayerUsed
-  let packeryUsed
-  let googlewebfontsUsed
-  let wpUsed
-  let youtubeUsed
-  let modernizrUsed
-  let ghostUsed
-  let joomlaUsed
-  let drupalUsed
-
-
-  try {
-    webpackUsed = await page.evaluate('webpackJsonp')
-  } catch(err){}
-
-  try {
-    googleanalyticsUsed = await page.evaluate('GoogleAnalyticsObject || ga')
-  } catch(err){}
-
-  try {
-    isotopeUsed = await page.evaluate('Isotope')
-  } catch(err){}
-
-  try {
-    masonryUsed = await page.evaluate('Masonry')
-  } catch(err){}
-
-  try {
-    outlayerUsed = await page.evaluate('Outlayer')
-  } catch(err){}
-
-  try {
-    packeryUsed = await page.evaluate('Packery')
-  } catch(err){}
-
-  try {
-    googlewebfontsUsed = await page.evaluate('WebFontConfig && WebFontConfig.google')
-  } catch(err){}
-
-  try {
-    wpUsed = await page.evaluate('wp')
-  } catch(err){}
-
-  try {
-    youtubeUsed = await page.evaluate('YT')
-  } catch(err){}
-
-  try {
-    modernizrUsed = await page.evaluate('Modernizr')
-  } catch(err){}
-
-  try {
-    ghostUsed = await page.evaluate('ghost')
-  } catch(err){}
-
-  try {
-    joomlaUsed = await page.evaluate('Joomla')
-  } catch(err){}
-
-  try {
-    drupalUsed = await page.evaluate('Drupal')
-  } catch(err){}
-
-
-  typeof webpackUsed !== 'undefined'
-         ? console.info(chalk.green(`Found webpack.`))
-         : console.log(chalk.red('No webpack found.'))
-
-  typeof googleanalyticsUsed !== 'undefined'
-         ? console.info(chalk.green(`Found Google Analytics.`))
-         : console.log(chalk.red('No Google Analytics found.'))
-
-  typeof isotopeUsed !== 'undefined'
-         ? console.info(chalk.green(`Found Isotope.`))
-         : console.log(chalk.red('No Isotope found.'))
-
-  typeof mansonryUsed !== 'undefined'
-         ? console.info(chalk.green(`Found Masonry.`))
-         : console.log(chalk.red('No Masonry found.'))
-
-  typeof outlayerUsed !== 'undefined'
-         ? console.info(chalk.green(`Found Outlayer.`))
-         : console.log(chalk.red('No Outlayer found.'))
-
-  typeof packeryUsed !== 'undefined'
-         ? console.info(chalk.green(`Found Packery.`))
-         : console.log(chalk.red('No Packery found.'))
-
-  typeof googlewebfontsUsed !== 'undefined'
-         ? console.info(chalk.green(`Found Google Webfonts.`))
-         : console.log(chalk.red('No Google Webfonts found.'))
-
-  typeof wpUsed !== 'undefined'
-         ? console.info(chalk.green(`Found WordPress.`))
-         : console.log(chalk.red('No WordPress found.'))
-
-  typeof youtubeUsed !== 'undefined'
-         ? console.info(chalk.green(`Found YouTube.`))
-         : console.log(chalk.red('No YouTube found.'))
-
-  typeof modernizrUsed !== 'undefined'
-         ? console.info(chalk.green(`Found Modernizr.`))
-         : console.log(chalk.red('No Modernizr found.'))
-
-  typeof ghostUsed !== 'undefined'
-         ? console.info(chalk.green(`Found ghost.`))
-         : console.log(chalk.red('No ghost found.'))
-
-  typeof drupalUsed !== 'undefined'
-         ? console.info(chalk.green(`Found Drupal.`))
-         : console.log(chalk.red('No Drupal found.'))
-
-  typeof joomlaUsed !== 'undefined'
-         ? console.info(chalk.green(`Found Joomla.`))
-         : console.log(chalk.red('No Joomla found.'))
-
   await browser.close()
 }
 
@@ -172,19 +49,13 @@ function getDetections(){
   return [
     {
       name: 'Foundation',
-      check: function(){
-        return 'Foundation.version'
-      },
-      output: function(result){
-        return chalk.yellow(result)
-      }
+      check: () => 'Foundation.version',
+      output: (result) => chalk.yellow(result)
     },
     {
       name: 'jQuery',
-      check: function(){
-          return 'jQuery.fn.jquery'
-      },
-      output: function(result){
+      check: () => 'jQuery.fn.jquery',
+      output: (result) => {
         result = result.split(/ (.+)/)
         result = result[1]
                  ? `${result[0]} (${result[1]})`
@@ -194,84 +65,100 @@ function getDetections(){
     },
     {
       name: 'Bootstrap',
-      check: function(){
-        return 'bootstrap.Tooltip.VERSION || $.fn.tooltip.Constructor.VERSION'
-      },
-      output: function(result){
-        return chalk.yellow(result)
-      }
+      check: () => 'bootstrap.Tooltip.VERSION || $.fn.tooltip.Constructor.VERSION',
+      output: (result) => chalk.yellow(result)
     },
     {
       name: 'Firebase',
-      check: function(){
-        return 'Firebase.SDK_VERSION'
-      },
-      output: function(result){
-        return chalk.yellow(result)
-      }
+      check: () => 'Firebase.SDK_VERSION',
+      output: (result) => chalk.yellow(result)
     },
     {
       name: 'Backbone',
-      check: function(){
-        return 'Backbone.VERSION'
-      },
-      output: function(result){
-        return chalk.yellow(result)
-      }
+      check: () => 'Backbone.VERSION',
+      output: (result) => chalk.yellow(result)
     },
     {
       name: 'Ember',
-      check: function(){
-        return 'Ember.VERSION'
-      },
-      output: function(result){
-        return chalk.yellow(result)
-      }
+      check: () => 'Ember.VERSION',
+      output: (result) => chalk.yellow(result)
     },
     {
       name: 'Handlebars',
-      check: function(){
-        return 'Handlebars.VERSION'
-      },
-      output: function(result){
-        return chalk.yellow(result)
-      }
+      check: () => 'Handlebars.VERSION',
+      output: (result) => chalk.yellow(result)
     },
     {
       name: 'Hammer',
-      check: function(){
-        return 'Hammer.VERSION'
-      },
-      output: function(result){
-        return chalk.yellow(result)
-      }
+      check: () => 'Hammer.VERSION',
+      output: (result) => chalk.yellow(result)
     },
     {
       name: 'Angular.js',
-      check: function(){
-        return 'angular.version.full'
-      },
-      output: function(result){
-        return chalk.yellow(result)
-      }
+      check: () => 'angular.version.full',
+      output: (result) => chalk.yellow(result)
     },
     {
       name: 'NProgress',
-      check: function(){
-        return 'NProgress.version'
-      },
-      output: function(result){
-        return chalk.yellow(result)
-      }
+      check: () => 'NProgress.version',
+      output: (result) => chalk.yellow(result)
     },
     {
       name: 'UIkit',
-      check: function(){
-        return 'UIkit.version'
-      },
-      output: function(result){
-        return chalk.yellow(result)
-      }
+      check: () => 'UIkit.version',
+      output: (result) => chalk.yellow(result)
     },
+    {
+      name: 'webpack',
+      check: () => 'webpackJsonp'
+    },
+    {
+      name: 'Google Analytics',
+      check: () => 'GoogleAnalyticsObject || ga'
+    },
+    {
+      name: 'Isotope',
+      check: () => 'Isotope'
+    },
+    {
+      name: 'Masonry',
+      check: () => 'Masonry'
+    },
+    {
+      name: 'Outlayer',
+      check: () => 'Outlayer'
+    },
+    {
+      name: 'Packery',
+      check: () => 'Packery'
+    },
+    {
+      name: 'Google Webfonts',
+      check: () => 'WebFontConfig && WebFontConfig.google'
+    },
+    {
+      name: 'WordPress',
+      check: () => 'wp'
+    },
+    {
+      name: 'YouTube',
+      check: () => 'YT'
+    },
+    {
+      name: 'Modernizr',
+      check: () => 'Modernizr'
+    },
+    {
+      name: 'ghost',
+      check: () => 'ghost'
+    },
+    {
+      name: 'Joomla',
+      check: () => 'Joomla'
+    },
+    {
+      name: 'Drupal',
+      check: () => 'Drupal'
+    }
   ]
 }
