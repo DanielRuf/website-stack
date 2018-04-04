@@ -10,81 +10,16 @@ async function run(){
   const browser = await puppeteer.launch()
   const page = await browser.newPage()
 
-  if(!process.argv[2]) {
-    console.log(chalk.red('No website was provided.'))
-    process.exit(1)
-    return
-  }
+  init()
 
   await page.goto(process.argv[2]) // get website from the first parameter after the script
 
-  const detections = [
-    {
-      name: 'Foundation',
-      check: function(){
-        return 'Foundation.version'
-      },
-      output: function(result){
-        return chalk.yellow(result)
-      }
-    },
-    {
-      name: 'jQuery',
-      check: function(){
-          return 'jQuery.fn.jquery'
-      },
-      output: function(result){
-        result = result.split(/ (.+)/)
-        result = result[1]
-                 ? `${result[0]} (${result[1]})`
-                 : result
-         return chalk.yellow(result)
-      }
-    },
-    {
-      name: 'Bootstrap',
-      check: function(){
-        return 'bootstrap.Tooltip.VERSION || $.fn.tooltip.Constructor.VERSION'
-      },
-      output: function(result){
-        return chalk.yellow(result)
-      }
-    },
-    {
-      name: 'Firebase',
-      check: function(){
-        return 'Firebase.SDK_VERSION'
-      },
-      output: function(result){
-        return chalk.yellow(result)
-      }
-    },
-  ]
-  
-  const detections_length = detections.length
-  for(i = 0; i < detections_length; i++){
-      let result
-      let name =  detections[i].name
-      try {
-          result = await page.evaluate(detections[i].check());
-      } catch(err){}
-      typeof result !== 'undefined'
-      ? detections[i].output
-        ? console.info(chalk.green('Found ' + name + ' ' + detections[i].output(result) + '.'))
-        : console.info(chalk.green('Found ' + name + '.'))
-      : console.log(chalk.red('No ' + name + ' found.'))
-  }
-  
+  const detections = await getDetections()
+
+  await outputResults(detections, page)
+
   process.exit(1)
   return
-  
-  let backboneVersion
-  let emberVersion
-  let handlebarsVersion
-  let hammerVersion
-  let angularVersion
-  let nprogressVersion
-  let uikitVersion
 
   let webpackUsed
   let googleanalyticsUsed
@@ -100,33 +35,6 @@ async function run(){
   let joomlaUsed
   let drupalUsed
 
-  try {
-    backboneVersion = await page.evaluate('Backbone.VERSION')
-  } catch(err){}
-
-  try {
-    emberVersion = await page.evaluate('Ember.VERSION')
-  } catch(err){}
-
-  try {
-    handlebarsVersion = await page.evaluate('Handlebars.VERSION')
-  } catch(err){}
-
-  try {
-    hammerVersion = await page.evaluate('Hammer.VERSION')
-  } catch(err){}
-
-  try {
-    angularVersion = await page.evaluate('angular.version.full')
-  } catch(err){}
-
-  try {
-    nprogressVersion = await page.evaluate('NProgress.version')
-  } catch(err){}
-
-  try {
-    uikitVersion = await page.evaluate('UIkit.version')
-  } catch(err){}
 
   try {
     webpackUsed = await page.evaluate('webpackJsonp')
@@ -180,33 +88,6 @@ async function run(){
     drupalUsed = await page.evaluate('Drupal')
   } catch(err){}
 
-  typeof backboneVersion !== 'undefined'
-         ? console.info(chalk.green(`Found Backbone ${chalk.yellow(backboneVersion)}.`))
-         : console.log(chalk.red('No Backbone found.'))
-
-  typeof emberVersion !== 'undefined'
-         ? console.info(chalk.green(`Found Ember ${chalk.yellow(emberVersion)}.`))
-         : console.log(chalk.red('No Ember found.'))
-
-  typeof handlebarsVersion !== 'undefined'
-         ? console.info(chalk.green(`Found Handlebars ${chalk.yellow(handlebarsVersion)}.`))
-         : console.log(chalk.red('No Handlebars found.'))
-
-  typeof hammerVersion !== 'undefined'
-         ? console.info(chalk.green(`Found Hammer ${chalk.yellow(hammerVersion)}.`))
-         : console.log(chalk.red('No Hammer found.'))
-
-  typeof angularVersion !== 'undefined'
-         ? console.info(chalk.green(`Found Angular.js ${chalk.yellow(angularVersion)}.`))
-         : console.log(chalk.red('No Angular.js found.'))
-
-  typeof nprogressVersion !== 'undefined'
-         ? console.info(chalk.green(`Found NProgress ${chalk.yellow(nprogressVersion)}.`))
-         : console.log(chalk.red('No NProgress found.'))
-
-  typeof uikitVersion !== 'undefined'
-         ? console.info(chalk.green(`Found UIkit ${chalk.yellow(uikitVersion)}.`))
-         : console.log(chalk.red('No UIkit found.'))
 
   typeof webpackUsed !== 'undefined'
          ? console.info(chalk.green(`Found webpack.`))
@@ -261,4 +142,136 @@ async function run(){
          : console.log(chalk.red('No Joomla found.'))
 
   await browser.close()
+}
+
+function init(){
+  if(!process.argv[2]) {
+    console.log(chalk.red('No website was provided.'))
+    process.exit(1)
+    return
+  }
+}
+
+async function outputResults(detections, page){
+  const detections_length = detections.length
+  for(i = 0; i < detections_length; i++){
+      let result
+      let name =  detections[i].name
+      try {
+          result = await page.evaluate(detections[i].check());
+      } catch(err){}
+      typeof result !== 'undefined'
+      ? detections[i].output
+        ? console.info(chalk.green('Found ' + name + ' ' + detections[i].output(result) + '.'))
+        : console.info(chalk.green('Found ' + name + '.'))
+      : console.log(chalk.red('No ' + name + ' found.'))
+  }
+}
+
+function getDetections(){
+  return [
+    {
+      name: 'Foundation',
+      check: function(){
+        return 'Foundation.version'
+      },
+      output: function(result){
+        return chalk.yellow(result)
+      }
+    },
+    {
+      name: 'jQuery',
+      check: function(){
+          return 'jQuery.fn.jquery'
+      },
+      output: function(result){
+        result = result.split(/ (.+)/)
+        result = result[1]
+                 ? `${result[0]} (${result[1]})`
+                 : result
+         return chalk.yellow(result)
+      }
+    },
+    {
+      name: 'Bootstrap',
+      check: function(){
+        return 'bootstrap.Tooltip.VERSION || $.fn.tooltip.Constructor.VERSION'
+      },
+      output: function(result){
+        return chalk.yellow(result)
+      }
+    },
+    {
+      name: 'Firebase',
+      check: function(){
+        return 'Firebase.SDK_VERSION'
+      },
+      output: function(result){
+        return chalk.yellow(result)
+      }
+    },
+    {
+      name: 'Backbone',
+      check: function(){
+        return 'Backbone.VERSION'
+      },
+      output: function(result){
+        return chalk.yellow(result)
+      }
+    },
+    {
+      name: 'Ember',
+      check: function(){
+        return 'Ember.VERSION'
+      },
+      output: function(result){
+        return chalk.yellow(result)
+      }
+    },
+    {
+      name: 'Handlebars',
+      check: function(){
+        return 'Handlebars.VERSION'
+      },
+      output: function(result){
+        return chalk.yellow(result)
+      }
+    },
+    {
+      name: 'Hammer',
+      check: function(){
+        return 'Hammer.VERSION'
+      },
+      output: function(result){
+        return chalk.yellow(result)
+      }
+    },
+    {
+      name: 'Angular.js',
+      check: function(){
+        return 'angular.version.full'
+      },
+      output: function(result){
+        return chalk.yellow(result)
+      }
+    },
+    {
+      name: 'NProgress',
+      check: function(){
+        return 'NProgress.version'
+      },
+      output: function(result){
+        return chalk.yellow(result)
+      }
+    },
+    {
+      name: 'UIkit',
+      check: function(){
+        return 'UIkit.version'
+      },
+      output: function(result){
+        return chalk.yellow(result)
+      }
+    },
+  ]
 }
