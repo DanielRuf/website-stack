@@ -42,6 +42,7 @@ async function run(){
   let modernizrUsed
   let ghostUsed
   let joomlaUsed
+  let drupalUsed
 
   try {
     foundationVersion = await page.evaluate('Foundation.version')
@@ -139,6 +140,10 @@ async function run(){
     joomlaUsed = await page.evaluate('Joomla')
   } catch(err){}
 
+  try {
+    drupalUsed = await page.evaluate('Drupal')
+  } catch(err){}
+
   typeof foundationVersion !== 'undefined'
          ? console.info(chalk.green(`Found Foundation ${chalk.yellow(foundationVersion)}.`))
          : console.log(chalk.red('No Foundation found.'))
@@ -226,6 +231,10 @@ async function run(){
   typeof ghostUsed !== 'undefined'
          ? console.info(chalk.green(`Found ghost.`))
          : console.log(chalk.red('No ghost found.'))
+
+  typeof drupalUsed !== 'undefined'
+         ? console.info(chalk.green(`Found Drupal.`))
+         : console.log(chalk.red('No Drupal found.'))
 
   typeof joomlaUsed !== 'undefined'
          ? console.info(chalk.green(`Found Joomla.`))
