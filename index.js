@@ -35,7 +35,7 @@ async function outputResults(detections, page){
       let result
       let name =  detections[i].name
       try {
-          result = await page.evaluate(detections[i].check());
+          result = await page.evaluate(detections[i].check())
       } catch(err){}
       typeof result !== 'undefined'
       ? detections[i].output
