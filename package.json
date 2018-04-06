@@ -1,6 +1,6 @@
 {
   "name": "website-stack",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "checks the frontend stack of websites",
   "main": "index.js",
   "scripts": {
