@@ -31,7 +31,7 @@ function init(){
 
 async function outputResults(detections, page){
   const detections_length = detections.length
-  for(i = 0; i < detections_length; i++){
+  for(let i = 0; i < detections_length; i++){
       let result
       let name =  detections[i].name
       try {
